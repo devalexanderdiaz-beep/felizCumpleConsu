@@ -1,0 +1,309 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #ffd1dc; /* Fondo rosa pastel */
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden; /* Evita scroll indeseado */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.view.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 10;
+}
+
+.title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3rem;
+    color: #d81b60;
+    margin-bottom: 2rem;
+    text-align: center;
+    padding: 0 40px;
+}
+
+/* --- ANIMACIÓN DEL SOBRE --- */
+.envelope-wrapper {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.envelope-wrapper.stop-pulse {
+    animation: none;
+    cursor: default;
+}
+
+.envelope-body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #e57373;
+    border-radius: 0 0 10px 10px;
+}
+
+/* .envelope-front {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 100px solid #ef5350;
+    z-index: 3;
+} */
+
+/* .flap {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 100px solid #ff8a80;
+    transform-origin: top;
+    transition: transform 0.6s ease;
+    z-index: 4;
+} */
+
+/* .letter {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.8s ease 0.3s;  Se retrasa un poco para que abra la solapa primero 
+    z-index: 2;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+} */
+
+/* .letter p {
+    font-size: 0.9rem;
+    color: #333;
+} */
+
+/* Clases para abrir y cerrar */
+/* .envelope-wrapper.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1;
+} */
+
+/* .envelope-wrapper.open .letter {
+    transform: translateY(-120px);
+    z-index: 5;
+} */
+
+/* 1. Cerramos completamente el sobre por los lados y por abajo */
+.envelope-front {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid #ef5350;   /* Lado izquierdo */
+    border-right: 150px solid #ef5350;  /* Lado derecho */
+    border-bottom: 100px solid #e53935; /* Lado inferior */
+    border-top: 100px solid transparent; /* Transparente para que salga la carta */
+    z-index: 3;
+}
+
+/* 2. Ajustamos la solapa para que encaje perfecto arriba */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 100px solid #ff8a80;
+    border-bottom: 100px solid transparent;
+    transform-origin: top;
+    transition: transform 0.6s ease;
+    z-index: 4;
+}
+
+/* 3. Escondemos la carta haciéndola más pequeña que el sobre (180px) */
+.letter {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    /* Ajustes clave para ocultarla */
+    height: 180px; /* Cabe perfecto dentro de los 200px del sobre */
+    overflow: hidden; /* Evita que el texto largo se desborde visualmente */
+    transition: transform 0.8s ease 0.3s, height 0.8s ease 0.3s; /* Animamos también la altura */
+}
+
+/* Ocultamos el texto y el botón al inicio para que no se amontonen en el espacio pequeño */
+.letter p, .letter button {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 4. Cuando el sobre se abre: la carta sube y crece para mostrar todo tu mensaje */
+.envelope-wrapper.open .letter {
+    transform: translateY(-200px); 
+    height: 420px; /* Altura suficiente para todo el texto de Consuuu */
+    z-index: 5;
+}
+
+/* El texto y botón aparecen suavemente una vez que la carta ya está arriba */
+.envelope-wrapper.open .letter p,
+.envelope-wrapper.open .letter button {
+    opacity: 1;
+    transition-delay: 0.8s; /* Le damos tiempo a la carta de subir antes de mostrar las letras */
+}
+
+.envelope-wrapper.close .letter {
+    transform: translateY(0);
+    transition: transform 0.6s ease;
+    z-index: 2;
+}
+
+.envelope-wrapper.close .flap {
+    transform: rotateX(0deg);
+    transition: transform 0.6s ease 0.4s;
+}
+
+.envelope-wrapper.fade-out {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+/* --- BOTONES --- */
+.btn {
+    background-color: #d81b60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.btn:hover { background-color: #ad1457; }
+.hidden { display: none !important; }
+
+/* --- CARRUSEL SWIPER --- */
+.swiper {
+    width: 300px;
+    height: 400px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- CUPÓN --- */
+.coupon-card {
+    background: white;
+    width: 320px;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    border: 3px dashed #d81b60;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+}
+
+.coupon-header h3 {
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.coupon-body h2 {
+    color: #d81b60;
+    margin: 15px 0;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+}
+
+.coupon-body p {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* --- VISTA FINAL Y WHATSAPP --- */
+#btn-redeem {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    padding: 12px 30px;
+}
+
+.final-gif {
+    width: 250px; /* Ajusta este valor dependiendo de qué tan grande sea tu gif */
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.whatsapp-btn {
+    background-color: #25D366; /* Color verde de WhatsApp */
+    text-decoration: none; /* Quita el subrayado del enlace */
+    display: inline-block; /* Permite que actúe como botón */
+    font-weight: 600;
+}
+
+.whatsapp-btn:hover {
+    background-color: #128C7E; /* Verde más oscuro al pasar el cursor */
+}
